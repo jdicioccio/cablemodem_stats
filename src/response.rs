@@ -149,7 +149,7 @@ impl ChannelInfo {
             channel.corrected_errs = channel_data[7].trim().parse().unwrap();
             channel.uncorrected_errs = channel_data[8].trim().parse().unwrap();
 
-            channels.insert(channel.channel_id, channel);
+            channels.insert(channel.channel, channel);
         }
 
         Ok(channels)
@@ -177,7 +177,7 @@ impl ChannelInfo {
             channel.freq_mhz = channel_data[5].parse().unwrap();
             channel.power_dbmv = channel_data[6].trim().parse().unwrap();
 
-            channels.insert(channel.channel_id, channel);
+            channels.insert(channel.channel, channel);
         }
 
         Ok(channels)
