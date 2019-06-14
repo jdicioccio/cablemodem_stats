@@ -143,11 +143,11 @@ impl ChannelInfo {
             channel.lock_status = channel_data[1].to_string();
             channel.modulation = channel_data[2].to_string();
             channel.channel_id = channel_data[3].parse().unwrap();
-            channel.freq_mhz = channel_data[4].parse().unwrap();
-            channel.power_dbmv = channel_data[5].parse().unwrap();
-            channel.snr_db = channel_data[6].parse().unwrap();
-            channel.corrected_errs = channel_data[7].parse().unwrap();
-            channel.uncorrected_errs = channel_data[8].parse().unwrap();
+            channel.freq_mhz = channel_data[4].trim().parse().unwrap();
+            channel.power_dbmv = channel_data[5].trim().parse().unwrap();
+            channel.snr_db = channel_data[6].trim().parse().unwrap();
+            channel.corrected_errs = channel_data[7].trim().parse().unwrap();
+            channel.uncorrected_errs = channel_data[8].trim().parse().unwrap();
 
             channels.insert(channel.channel_id, channel);
         }
@@ -175,7 +175,7 @@ impl ChannelInfo {
             channel.channel_id = channel_data[3].parse().unwrap();
             channel.sym_rate = channel_data[4].parse().unwrap();
             channel.freq_mhz = channel_data[5].parse().unwrap();
-            channel.power_dbmv = channel_data[6].parse().unwrap();
+            channel.power_dbmv = channel_data[6].trim().parse().unwrap();
 
             channels.insert(channel.channel_id, channel);
         }
