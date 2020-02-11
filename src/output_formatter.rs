@@ -33,6 +33,7 @@ impl OutputFormatter for CricketFormatter {
         let output: String;
         let mut iovec: Vec<String> = Vec::new();
 
+        iovec.push(format!("system_uptime:{}", info.system_uptime));
         for (channel_id, channel) in info.downstream_info.iter() {
             iovec.push(format!("{}_ds.freq:{}", channel_id, channel.freq_mhz));
             iovec.push(format!(

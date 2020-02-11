@@ -22,7 +22,7 @@ done
 for channel in $(seq 1 4); do
   for us in power; do
     title_extra=""
-    echo $ds | grep -E '_e$' >/dev/null 2>&1
+    echo $us | grep -E '_e$' >/dev/null 2>&1
     if [ $? -eq 0 ]; then
       title_extra="per second"
     fi
@@ -38,4 +38,12 @@ for channel in $(seq 1 4); do
       GPRINT:varmax:"Maximum\:%8.2lf %s"
   done
 done
+
+rrdtool graph -s -172800 -e -300 -t "Modem System Uptime" system_uptime.png \
+  DEF:var=inet.rrd:system_uptime:AVERAGE \
+  LINE1:var#FF0000 \
+  VDEF:varlast=var,LAST \
+  VDEF:varmax=var,MAXIMUM \
+  GPRINT:varlast:" Current\:%10ld %s " \
+  GPRINT:varmax:"Maximum\:%10ld %s"
 

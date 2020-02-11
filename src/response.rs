@@ -3,6 +3,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fs::OpenOptions;
+use regex::Regex;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct MotoStatusStartupSequenceResponse {
@@ -120,6 +121,7 @@ impl UpstreamChannelInfo {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ChannelInfo {
     pub timestamp: std::time::SystemTime,
+    pub system_uptime: u64,
     pub downstream_info: BTreeMap<i32, DownstreamChannelInfo>,
     pub upstream_info: BTreeMap<i32, UpstreamChannelInfo>,
 }
@@ -217,12 +219,30 @@ impl ChannelInfo {
         Ok(())
     }
 
+    fn uptime_to_seconds(uptime_str: &str) -> Result<u64, String> {
+        let mut uptime: u64 = 0;
+        println!("{}", uptime_str);
+        let re = Regex::new(r"^(\d+) days (\d+)h:(\d+)m:(\d+)s").unwrap();
+        for cap in re.captures_iter(uptime_str) {
+            let days = &cap[1].parse::<u64>().unwrap();
+            let hours = &cap[2].parse::<u64>().unwrap();
+            let minutes = &cap[3].parse::<u64>().unwrap();
+            let seconds = &cap[4].parse::<u64>().unwrap();
+
+            uptime = (days * 86400) + (hours * 3600) + (minutes * 60) + seconds;
+        }
+
+        Ok(uptime)
+    }
+
     pub fn from(body: &str) -> Result<ChannelInfo, String> {
         let parsed: HNAPsResponse = serde_json::from_str(body).unwrap();
         let ds_channels = ChannelInfo::parse_downstream_channel_info(&parsed)?;
         let us_channels = ChannelInfo::parse_upstream_channel_info(&parsed)?;
+
         let mut result = ChannelInfo {
             timestamp: std::time::SystemTime::now(),
+            system_uptime: ChannelInfo::uptime_to_seconds(&parsed.GetMultipleHNAPsResponse.GetMotoStatusConnectionInfoResponse.MotoConnSystemUpTime)?,
             downstream_info: ds_channels,
             upstream_info: us_channels,
         };
