@@ -7,7 +7,7 @@ for channel in $(seq 1 32); do
       title_extra="per second"
     fi
 
-    rrdtool graph -s -172800 -e -300 -t "Channel ${channel} - ${ds} ${title_extra}" ds_${channel}_${ds}.png \
+    rrdtool graph -s -432000 -e -300 -t "Channel ${channel} - ${ds} ${title_extra}" -w 1162 ds_${channel}_${ds}.png \
        DEF:var=inet.rrd:${channel}_ds_${ds}:AVERAGE \
        LINE1:var#FF0000 \
        VDEF:varavg=var,AVERAGE \
@@ -27,7 +27,7 @@ for channel in $(seq 1 4); do
       title_extra="per second"
     fi
 
-    rrdtool graph -s -172800 -e -300 -t "Channel ${channel} - ${us} ${title_extra}" us_${channel}_${us}.png \
+    rrdtool graph -s -432000 -e -300 -t "Channel ${channel} - ${us} ${title_extra}" -w 1162 us_${channel}_${us}.png \
       DEF:var=inet.rrd:${channel}_us_${us}:AVERAGE \
       LINE1:var#FF0000 \
       VDEF:varavg=var,AVERAGE \
@@ -39,11 +39,11 @@ for channel in $(seq 1 4); do
   done
 done
 
-rrdtool graph -s -172800 -e -300 -t "Modem System Uptime" system_uptime.png \
+rrdtool graph -s -432000 -e -300 -t "Modem System Uptime" -w 1162 system_uptime.png \
   DEF:var=inet.rrd:system_uptime:AVERAGE \
   LINE1:var#FF0000 \
   VDEF:varlast=var,LAST \
   VDEF:varmax=var,MAXIMUM \
-  GPRINT:varlast:" Current\:%10ld %s " \
-  GPRINT:varmax:"Maximum\:%10ld %s"
+  GPRINT:varlast:" Current\:%10.0lf %s " \
+  GPRINT:varmax:"Maximum\:%10.0lf %s"
 
