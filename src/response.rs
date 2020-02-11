@@ -221,7 +221,6 @@ impl ChannelInfo {
 
     fn uptime_to_seconds(uptime_str: &str) -> Result<u64, String> {
         let mut uptime: u64 = 0;
-        println!("{}", uptime_str);
         let re = Regex::new(r"^(\d+) days (\d+)h:(\d+)m:(\d+)s").unwrap();
         for cap in re.captures_iter(uptime_str) {
             let days = &cap[1].parse::<u64>().unwrap();
