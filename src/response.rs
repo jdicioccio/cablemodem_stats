@@ -138,7 +138,7 @@ impl ChannelInfo {
         let mut channels: BTreeMap<i32, DownstreamChannelInfo> = BTreeMap::new();
 
         for channel_raw in channels_raw {
-            let channel_data: Vec<&str> = channel_raw.split("^").collect();
+            let channel_data: Vec<&str> = channel_raw.split('^').collect();
             let mut channel = DownstreamChannelInfo::new();
             //1^Locked^QAM256^20^495.0^-4.2^40.1^494575281^18816965^
             channel.channel = channel_data[0].parse().unwrap();
@@ -168,7 +168,7 @@ impl ChannelInfo {
         let mut channels: BTreeMap<i32, UpstreamChannelInfo> = BTreeMap::new();
 
         for channel_raw in channels_raw {
-            let channel_data: Vec<&str> = channel_raw.split("^").collect();
+            let channel_data: Vec<&str> = channel_raw.split('^').collect();
             let mut channel = UpstreamChannelInfo::new();
             //1^Locked^SC-QAM^77^5120^17.3^55.5^
             channel.channel = channel_data[0].parse().unwrap();

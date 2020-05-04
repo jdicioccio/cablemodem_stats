@@ -56,16 +56,12 @@ impl OutputFormatter for CricketFormatter {
             };
             iovec.push(format!("{}_ds.lock_st:{}", channel_id, locked));
 
-            match channel.uncorrected_errs_delta {
-                Some(delta) => iovec.push(format!("{}_ds.uncorr_e_dlt:{}", channel_id, delta)),
-                None => (),
-            };
-            match channel.corrected_errs_delta {
-                Some(delta) => {
-                    iovec.push(format!("{}_ds.corr_e_dlt:{}", channel_id, delta))
-                }
-                None => (),
-            };
+            if let Some(delta) = channel.uncorrected_errs_delta {
+                iovec.push(format!("{}_ds.uncorr_e_dlt:{}", channel_id, delta));
+            }
+            if let Some(delta) = channel.corrected_errs_delta {
+                iovec.push(format!("{}_ds.corr_e_dlt:{}", channel_id, delta));
+            }
         }
 
         for (channel_id, channel) in info.upstream_info.iter() {
