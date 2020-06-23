@@ -69,10 +69,10 @@ pub struct DownstreamChannelInfo {
     pub freq_mhz: f32,
     pub power_dbmv: f32,
     pub snr_db: f32,
-    pub corrected_errs: i128,
-    pub uncorrected_errs: i128,
-    pub corrected_errs_delta: Option<i128>,
-    pub uncorrected_errs_delta: Option<i128>,
+    pub corrected_errs: u32,
+    pub uncorrected_errs: u32,
+    pub corrected_errs_delta: Option<u32>,
+    pub uncorrected_errs_delta: Option<u32>,
 }
 
 impl DownstreamChannelInfo {
@@ -127,6 +127,14 @@ pub struct ChannelInfo {
 }
 
 impl ChannelInfo {
+    fn neg_i32_to_u32(i: i32) -> Result<u32, String> {
+        let mut u: u32 = 0;
+        if i.is_negative() {
+            u = u32::from_ne_bytes(i.to_ne_bytes());
+        }
+        Ok(u)
+    }
+
     fn parse_downstream_channel_info(
         data: &HNAPsResponse,
     ) -> Result<BTreeMap<i32, DownstreamChannelInfo>, String> {
@@ -148,8 +156,8 @@ impl ChannelInfo {
             channel.freq_mhz = channel_data[4].trim().parse().unwrap();
             channel.power_dbmv = channel_data[5].trim().parse().unwrap();
             channel.snr_db = channel_data[6].trim().parse().unwrap();
-            channel.corrected_errs = channel_data[7].trim().parse().unwrap();
-            channel.uncorrected_errs = channel_data[8].trim().parse().unwrap();
+            channel.corrected_errs = ChannelInfo::neg_i32_to_u32(channel_data[7].trim().parse::<i32>().unwrap()).unwrap();
+            channel.uncorrected_errs = ChannelInfo::neg_i32_to_u32(channel_data[8].trim().parse::<i32>().unwrap()).unwrap();
 
             channels.insert(channel.channel, channel);
         }
