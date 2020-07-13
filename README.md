@@ -7,6 +7,8 @@ As you can see, I don't have a clever name for this tool, but, in a nutshell, wh
 
 I wrote this tool as I was having issues with my cable internet and wanted to have solid documentation to back it up. The issues have since been resolved. Hopefully this comes in handy for others.
 
+**This, so far, is only known to work on the Motorola MB8600.** If you have a different cable modem, feel free to give it a shot, but know that it's a roll of the dice.
+
 ## Prerequisites
 - Rust compiler (I'm using 1.44.1)
 - RRDTool
