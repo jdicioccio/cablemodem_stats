@@ -2,7 +2,6 @@
 
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use std::fs::OpenOptions;
 use regex::Regex;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -71,8 +70,6 @@ pub struct DownstreamChannelInfo {
     pub snr_db: f32,
     pub corrected_errs: u32,
     pub uncorrected_errs: u32,
-    pub corrected_errs_delta: Option<u32>,
-    pub uncorrected_errs_delta: Option<u32>,
 }
 
 impl DownstreamChannelInfo {
@@ -87,8 +84,6 @@ impl DownstreamChannelInfo {
             snr_db: 0.0,
             corrected_errs: 0,
             uncorrected_errs: 0,
-            corrected_errs_delta: None,
-            uncorrected_errs_delta: None,
         }
     }
 }
@@ -193,40 +188,6 @@ impl ChannelInfo {
         Ok(channels)
     }
 
-    fn save_channel_info(&self) -> std::io::Result<()> {
-        let file = OpenOptions::new()
-            .truncate(true)
-            .write(true)
-            .create(true)
-            .open("cm_state.json")?;
-
-        let writer = std::io::BufWriter::new(file);
-        serde_json::to_writer_pretty(writer, &self)?;
-
-        Ok(())
-    }
-
-    fn load_deltas(&mut self) -> Result<(), std::io::Error> {
-        let result: ChannelInfo;
-        let file = OpenOptions::new()
-            .read(true)
-            .create(false)
-            .open("cm_state.json")?;
-
-        let reader = std::io::BufReader::new(file);
-        result = serde_json::from_reader(reader).unwrap();
-
-        for (channel_id, channel) in self.downstream_info.iter_mut() {
-            channel.corrected_errs_delta =
-                Some(channel.corrected_errs - result.downstream_info[&channel_id].corrected_errs);
-            channel.uncorrected_errs_delta = Some(
-                channel.uncorrected_errs - result.downstream_info[&channel_id].uncorrected_errs,
-            );
-        }
-
-        Ok(())
-    }
-
     fn uptime_to_seconds(uptime_str: &str) -> Result<u64, String> {
         let mut uptime: u64 = 0;
         let re = Regex::new(r"^(\d+) days (\d+)h:(\d+)m:(\d+)s").unwrap();
@@ -247,31 +208,12 @@ impl ChannelInfo {
         let ds_channels = ChannelInfo::parse_downstream_channel_info(&parsed)?;
         let us_channels = ChannelInfo::parse_upstream_channel_info(&parsed)?;
 
-        let mut result = ChannelInfo {
+        let result = ChannelInfo {
             timestamp: std::time::SystemTime::now(),
             system_uptime: ChannelInfo::uptime_to_seconds(&parsed.GetMultipleHNAPsResponse.GetMotoStatusConnectionInfoResponse.MotoConnSystemUpTime)?,
             downstream_info: ds_channels,
             upstream_info: us_channels,
         };
-
-        match result.load_deltas() {
-            Ok(()) => (),
-            Err(e) => println!("{}", e),
-        };
-
-        result.save_channel_info().unwrap();
-
-        // println!(
-        //     "New is {:?} seconds newer than old",
-        //     result
-        //         .timestamp
-        //         .duration_since(std::time::UNIX_EPOCH)
-        //         .unwrap()
-        //         - old_result
-        //             .timestamp
-        //             .duration_since(std::time::UNIX_EPOCH)
-        //             .unwrap()
-        // );
 
         Ok(result)
     }

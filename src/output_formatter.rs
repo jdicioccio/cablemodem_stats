@@ -5,29 +5,6 @@ pub trait OutputFormatter {
 }
 pub struct CricketFormatter {}
 
-// pub struct DownstreamChannelInfo {
-//     channel: i32,
-//     lock_status: String,
-//     modulation: String,
-//     channel_id: i32,
-//     freq_mhz: f32,
-//     power_dbmv: f32,
-//     snr_db: f32,
-//     corrected_errs: i128,
-//     uncorrected_errs: i128,
-//     corrected_errs_delta: Option<i128>,
-//     uncorrected_errs_delta: Option<i128>,
-// }
-// pub struct UpstreamChannelInfo {
-//     pub channel: i32,
-//     pub lock_status: String,
-//     pub modulation: String,
-//     pub channel_id: i32,
-//     pub sym_rate: i32,
-//     pub freq_mhz: f32,
-//     pub power_dbmv: f32,
-// }
-
 impl OutputFormatter for CricketFormatter {
     fn format(info: &ChannelInfo) -> Result<String, String> {
         let output: String;
@@ -55,13 +32,6 @@ impl OutputFormatter for CricketFormatter {
                 _ => 0,
             };
             iovec.push(format!("{}_ds.lock_st:{}", channel_id, locked));
-
-            if let Some(delta) = channel.uncorrected_errs_delta {
-                iovec.push(format!("{}_ds.uncorr_e_dlt:{}", channel_id, delta));
-            }
-            if let Some(delta) = channel.corrected_errs_delta {
-                iovec.push(format!("{}_ds.corr_e_dlt:{}", channel_id, delta));
-            }
         }
 
         for (channel_id, channel) in info.upstream_info.iter() {
