@@ -8,7 +8,7 @@ As you can see, I don't have a clever name for this tool, but, in a nutshell, wh
 I wrote this tool as I was having issues with my cable internet and wanted to have solid documentation to back it up. The issues have since been resolved. Hopefully this comes in handy for others.
 
 ## Prerequisites
-- Rust compiler (I used 1.37.0
+- Rust compiler (I'm using 1.44.1)
 - RRDTool
 - A unix/linux shell environment would let you run some of the convenience scripts
 
@@ -16,7 +16,7 @@ I wrote this tool as I was having issues with my cable internet and wanted to ha
 ### Build it
 `cargo build`
 ### Run it
-I've provided a convenience script to generate the RRD file. Run `rrd_create_command.sh` and execute the command that it prints out. You can also pipe it to `sh`.
+I've provided a convenience script to generate the RRD file. Run, for example `./target/build/moto_arris_cm_stats | ./rrd_create_command.sh`, to generate the appropriate RRD commands that it prints out. You can copy and paste the output, or you can pipe it to `sh` if it looks sane.
 
 After creating the RRD file, test the tool to make sure you're getting stats from it. For example: ` ./target/debug/moto_arris_cm_stats`
 
