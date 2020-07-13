@@ -16,7 +16,7 @@ I wrote this tool as I was having issues with my cable internet and wanted to ha
 ### Build it
 `cargo build`
 ### Run it
-I've provided a convenience script to generate the RRD file. Run, for example `./target/build/moto_arris_cm_stats | ./rrd_create_command.sh`, to generate the appropriate RRD commands that it prints out. You can copy and paste the output, or you can pipe it to `sh` if it looks sane.
+I've provided a convenience script to generate the RRD file. Run, for example `./target/build/moto_arris_cm_stats | ./rrd_create_command.sh`, to generate the appropriate RRD commands for creating the RRD file. You can copy and paste the output, or you can pipe it to `sh` if it looks sane.
 
 After creating the RRD file, test the tool to make sure you're getting stats from it. For example: ` ./target/debug/moto_arris_cm_stats`
 
