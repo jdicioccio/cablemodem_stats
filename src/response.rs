@@ -123,9 +123,11 @@ pub struct ChannelInfo {
 
 impl ChannelInfo {
     fn neg_i32_to_u32(i: i32) -> Result<u32, String> {
-        let mut u: u32 = 0;
+        let u: u32;
         if i.is_negative() {
             u = u32::from_ne_bytes(i.to_ne_bytes());
+        } else {
+            u = i as u32;
         }
         Ok(u)
     }
