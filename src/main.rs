@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
     
     let req = Request::post("https://192.168.100.1/HNAP1/")
-        .ssl_options(SslOption::DANGER_ACCEPT_INVALID_CERTS)
+        .ssl_options(SslOption::DANGER_ACCEPT_INVALID_CERTS|SslOption::DANGER_ACCEPT_INVALID_HOSTS)
         .header("Content-Type", "application/json")
 //        .header("Cookie", format!("uid={}; PrivateKey={}", uid, private_key))
 //        .header("HNAP_AUTH", "XXXX 1559973888764")
