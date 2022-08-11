@@ -19,6 +19,10 @@ impl OutputFormatter for CricketFormatter {
             ));
             iovec.push(format!("{}_ds.snr:{}", channel_id, channel.snr_db));
             iovec.push(format!(
+                "{}_ds.no_errs:{}",
+                channel_id, channel.no_errs
+            ));
+            iovec.push(format!(
                 "{}_ds.corr_e:{}",
                 channel_id, channel.corrected_errs
             ));

@@ -1,28 +1,55 @@
+mod fetcher;
 mod output_formatter;
 mod response;
-use isahc::prelude::*;
-use isahc::config::SslOption;
+
+use clap::{ArgEnum, CommandFactory, Parser};
 use output_formatter::*;
-use response::*;
+
+#[derive(ArgEnum, Debug, Clone)]
+pub enum ModemTypes {
+    Cgm4331com,
+    Mb8600,
+}
+
+#[derive(Parser)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+    #[clap(arg_enum)]
+    modem_type: ModemTypes,
+
+    #[clap(short, long, value_parser, value_name = "USERNAME")]
+    username: Option<String>,
+
+    #[clap(short, long, value_parser, value_name = "PASSWORD")]
+    password: Option<String>,
+}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
-    
-    let req = Request::post("https://192.168.100.1/HNAP1/")
-        .ssl_options(SslOption::DANGER_ACCEPT_INVALID_CERTS|SslOption::DANGER_ACCEPT_INVALID_HOSTS)
-        .header("Content-Type", "application/json")
-//        .header("Cookie", format!("uid={}; PrivateKey={}", uid, private_key))
-//        .header("HNAP_AUTH", "XXXX 1559973888764")
-        .header("SOAPACTION", r#""http://purenetworks.com/HNAP1/GetMultipleHNAPs""#)
-        .header("Expect", "")
-        .body(r#"{"GetMultipleHNAPs":{"GetMotoStatusStartupSequence":"","GetMotoStatusConnectionInfo":"","GetMotoStatusDownstreamChannelInfo":"","GetMotoStatusUpstreamChannelInfo":"","GetMotoLagStatus":""}}"#)?;
 
-    let mut resp = req.send()?;
+    let args = Args::parse();
+    let modem_type = args.modem_type;
+    let mut cmd = Args::command();
 
-    //assert!(resp.status().is_success());
+    let body = match modem_type {
+        ModemTypes::Cgm4331com => {
+            if args.username.is_none() || args.password.is_none() {
+                cmd.error(
+                    clap::ErrorKind::MissingRequiredArgument,
+                    "Username and password are required for this modem type",
+                )
+                .exit();
+            }
+            fetcher::fetch(&fetcher::cgm4331com_fetcher::CGM4331COM::new(
+                &args.username.unwrap(),
+                &args.password.unwrap(),
+            ))
+            .unwrap()
+        }
+        ModemTypes::Mb8600 => fetcher::fetch(&fetcher::mb8600_fetcher::MB8600::new()).unwrap(),
+    };
 
-    let body = resp.body_mut().text()?;
-    let channel_info = ChannelInfo::from(&body)?;
+    let channel_info = response::parse(modem_type, &body)?;
 
     let output = output_formatter::CricketFormatter::format(&channel_info).unwrap();
     println!("{}", output);
