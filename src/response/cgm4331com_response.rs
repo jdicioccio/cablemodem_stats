@@ -26,35 +26,37 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
 
                 for (i, value) in values.iter().enumerate() {
                     let value_str = value.text().unwrap().trim().to_string();
+                    let mut channel_id: i32 = i.try_into().unwrap();
+                    channel_id += 1;
 
                     if section_num == OutputSections::Downstream as usize {
                         if !channelinfo
                             .downstream_info
-                            .contains_key(&i.try_into().unwrap())
+                            .contains_key(&channel_id)
                         {
                             channelinfo
                                 .downstream_info
-                                .insert(i.try_into().unwrap(), DownstreamChannelInfo::new());
+                                .insert(channel_id, DownstreamChannelInfo::new());
                         }
                         match name.as_str() {
                             "Index" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .channel_id = value_str.parse::<i32>().unwrap();
                             }
                             "Lock Status" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .lock_status = value_str;
                             }
                             "Frequency" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .freq_mhz =
                                     value_str.split(' ').nth(0).unwrap().parse::<f32>().unwrap();
@@ -62,7 +64,7 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                             "SNR" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .snr_db =
                                     value_str.split(' ').nth(0).unwrap().parse::<f32>().unwrap();
@@ -70,7 +72,7 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                             "Power Level" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .power_dbmv =
                                     value_str.split(' ').nth(0).unwrap().parse::<f32>().unwrap();
@@ -78,7 +80,7 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                             "Modulation" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .modulation = value_str;
                             }
@@ -87,31 +89,31 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                     } else if section_num == OutputSections::Upstream as usize {
                         if !channelinfo
                             .upstream_info
-                            .contains_key(&i.try_into().unwrap())
+                            .contains_key(&channel_id)
                         {
                             channelinfo
                                 .upstream_info
-                                .insert(i.try_into().unwrap(), UpstreamChannelInfo::new());
+                                .insert(channel_id, UpstreamChannelInfo::new());
                         }
                         match name.as_str() {
                             "Index" => {
                                 channelinfo
                                     .upstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .channel_id = value_str.parse::<i32>().unwrap();
                             }
                             "Lock Status" => {
                                 channelinfo
                                     .upstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .lock_status = value_str;
                             }
                             "Frequency" => {
                                 channelinfo
                                     .upstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .freq_mhz =
                                     value_str.split(' ').nth(0).unwrap().parse::<f32>().unwrap();
@@ -119,14 +121,14 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                             "Symbol Rate" => {
                                 channelinfo
                                     .upstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .sym_rate = value_str.parse::<i32>().unwrap();
                             }
                             "Power Level" => {
                                 channelinfo
                                     .upstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .power_dbmv =
                                     value_str.split(' ').nth(0).unwrap().parse::<f32>().unwrap();
@@ -134,7 +136,7 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                             "Modulation" => {
                                 channelinfo
                                     .upstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .modulation = value_str;
                             }
@@ -145,21 +147,21 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                             "Unerrored Codewords" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .no_errs = value_str.parse::<u32>().unwrap();
                             }
                             "Correctable Codewords" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .corrected_errs = value_str.parse::<u32>().unwrap();
                             }
                             "Uncorrectable Codewords" => {
                                 channelinfo
                                     .downstream_info
-                                    .get_mut(&i.try_into().unwrap())
+                                    .get_mut(&channel_id)
                                     .unwrap()
                                     .uncorrected_errs = value_str.parse::<u32>().unwrap();
                             }
