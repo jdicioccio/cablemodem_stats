@@ -1,6 +1,6 @@
 [package]
-name = "comcast_xb7_cm_stats"
-version = "0.1.0"
+name = "cablemodem_stats"
+version = "0.2.0"
 authors = ["Jason DiCioccio <jd@ods.org>"]
 edition = "2021"
 

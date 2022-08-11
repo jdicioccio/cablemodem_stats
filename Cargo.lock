@@ -77,6 +77,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "cablemodem_stats"
+version = "0.2.0"
+dependencies = [
+ "clap",
+ "crabquery",
+ "env_logger",
+ "isahc",
+ "regex",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "cache-padded"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -152,19 +165,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2850f2f5a82cbf437dd5af4d49848fbdfc27c157c3d010345776f952765261c5"
 dependencies = [
  "os_str_bytes",
-]
-
-[[package]]
-name = "comcast_xb7_cm_stats"
-version = "0.1.0"
-dependencies = [
- "clap",
- "crabquery",
- "env_logger",
- "isahc",
- "regex",
- "serde",
- "serde_json",
 ]
 
 [[package]]
