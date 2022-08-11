@@ -1,4 +1,5 @@
 use isahc::prelude::*;
+use isahc::Request;
 use crate::fetcher::Fetcher;
 
 pub struct CGM4331COM {
@@ -46,7 +47,7 @@ impl Fetcher for CGM4331COM {
 
         assert!(resp2.status().is_success());
 
-        let body2 = resp2.body_mut().text()?;
+        let body2 = resp2.text()?;
 
         Ok(body2)
     }

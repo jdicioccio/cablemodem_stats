@@ -1,4 +1,5 @@
 use isahc::prelude::*;
+use isahc::Request;
 use isahc::config::SslOption;
 use crate::fetcher::Fetcher;
 
@@ -23,7 +24,7 @@ impl Fetcher for MB8600 {
 
         let mut resp = req.send()?;
 
-        let body = resp.body_mut().text()?;
+        let body = resp.text()?;
 
         Ok(body)
     }
