@@ -1,26 +1,31 @@
-use isahc::prelude::*;
-use isahc::Request;
 use crate::fetcher::Fetcher;
+use isahc::prelude::*;
+use super::make_request_builder;
 
 pub struct CGM4331COM {
     username: String,
-    password: String
+    password: String,
 }
 
 impl CGM4331COM {
     pub fn new(username: &String, password: &String) -> CGM4331COM {
         CGM4331COM {
             username: String::from(username),
-            password: String::from(password)
+            password: String::from(password),
         }
     }
 }
 
 impl Fetcher for CGM4331COM {
-    fn fetch(&self) -> Result<String, isahc::Error> {
-        let req = Request::post("http://10.0.0.1/check.jst")
+    fn fetch(&self, use_ssl: bool) -> Result<String, isahc::Error> {
+        let req_builder = make_request_builder("10.0.0.1/check.jst", use_ssl);
+
+        let req = req_builder
             .header("Content-Type", "application/x-www-form-urlencoded")
-            .body(format!("username={}&password={}", self.username, self.password))?;
+            .body(format!(
+                "username={}&password={}",
+                self.username, self.password
+            ))?;
 
         let resp = req.send()?;
 
@@ -40,9 +45,8 @@ impl Fetcher for CGM4331COM {
 
         let cookie = sess_cookie.unwrap();
 
-        let req2 = Request::get("http://10.0.0.1/network_setup.jst")
-            .header("Cookie", cookie)
-            .body(())?;
+        let req2_builder = make_request_builder("10.0.0.1/network_setup.jst", use_ssl);
+        let req2 = req2_builder.header("Cookie", cookie).body(())?;
         let mut resp2 = req2.send()?;
 
         assert!(resp2.status().is_success());
