@@ -1,3 +1,4 @@
+[![Rust](https://github.com/jdicioccio/cablemodem_stats/actions/workflows/rust.yml/badge.svg)](https://github.com/jdicioccio/cablemodem_stats/actions/workflows/rust.yml)
 # Cable Modem Stats gatherer (formerly only for Motorola MB8600)
 ## What is this?
 In a nutshell, what it does is it:
