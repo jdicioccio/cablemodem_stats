@@ -45,7 +45,7 @@ struct Args {
     )]
     password: Option<String>,
 
-    #[clap(long, value_parser, value_name = "URL", help = "Use InfluxDB (at URL)")]
+    #[clap(long, value_parser, value_name = "URL", help = "InfluxDB URL")]
     influxdb_url: Option<String>,
 
     #[clap(long, value_parser, value_name = "BUCKET", help = "InfluxDB bucket")]
