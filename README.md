@@ -19,7 +19,7 @@ I wrote this tool as I was having issues with my cable internet and wanted to ha
 ### Build it
 `cargo build`
 ### Run it
-If you choose to go the `rrdtool` route, I've provided a convenience script to generate the RRD file. Run, for example `./target/build/cablemodem_stats mb8600 | ./rrd_create_command.sh`, to generate the appropriate RRD commands for creating the RRD file. You can copy and paste the output, or you can pipe it to `sh` if it looks sane.
+If you choose to go the `rrdtool` route (referred to as `cricket` output in `cablemodem_stats`), I've provided a convenience script to generate the RRD file. Run, for example `./target/build/cablemodem_stats mb8600 | ./rrd_create_command.sh`, to generate the appropriate RRD commands for creating the RRD file. You can copy and paste the output, or you can pipe it to `sh` if it looks sane.
 
 After creating the RRD file, test the tool to make sure you're getting stats from it. For example, with an MB8600: ` ./target/debug/cablemodem_stats mb8600`
 
