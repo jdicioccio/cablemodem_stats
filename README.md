@@ -41,7 +41,7 @@ OPTIONS:
         --influxdb-bucket <BUCKET>    InfluxDB bucket
         --influxdb-org <ORG>          InfluxDB organization
         --influxdb-token <TOKEN>      InfluxDB token
-        --influxdb-url <URL>          Use InfluxDB (at URL)
+        --influxdb-url <URL>          InfluxDB URL
     -n, --no-ssl                      Don't use SSL when connecting to cable modem
     -o, --output <OUTPUT>             [default: cricket] [possible values: cricket, influxdbv2]
     -p, --password <PASSWORD>         Only used with some cable modems
