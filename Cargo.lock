@@ -580,7 +580,7 @@ dependencies = [
 [[package]]
 name = "influxdb_rs"
 version = "0.2.0"
-source = "git+https://github.com/jdicioccio/influxdb-rs#a21fb618face210bbf7e49bc88d70938940d6bb4"
+source = "git+https://github.com/jdicioccio/influxdb-rs?branch=fix-Point-forced-borrow#38d244c10bbd6d538f07f961ee9f1a593684c3ba"
 dependencies = [
  "bytes",
  "chrono",
