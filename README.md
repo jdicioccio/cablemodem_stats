@@ -4,7 +4,7 @@
 In a nutshell, what it does is it:
 
 1. Gathers stats from a Motorola or Comcast XB7 (Technicolor) cable modem. These stats include SnR, power level, corrected errors, and uncorrected errors for each channel.
-1. It also will graph this data using the ancient RRDTool. (Planning to add influxdb in the near future)
+1. It also will graph this data using the ancient RRDTool or the much newer InfluxDB (version 2)
 
 I wrote this tool as I was having issues with my cable internet and wanted to have solid documentation to back it up. The issues have since been resolved. Hopefully this comes in handy for others.
 
@@ -12,14 +12,14 @@ I wrote this tool as I was having issues with my cable internet and wanted to ha
 
 ## Prerequisites
 - Rust compiler (I'm using 1.62.1)
-- RRDTool
-- A unix/linux shell environment would let you run some of the convenience scripts
+- RRDTool or InfluxDBv2
+- And for RRDTool, a unix/linux shell environment would let you run some of the convenience scripts
 
 ## Usage
 ### Build it
 `cargo build`
 ### Run it
-I've provided a convenience script to generate the RRD file. Run, for example `./target/build/cablemodem_stats mb8600 | ./rrd_create_command.sh`, to generate the appropriate RRD commands for creating the RRD file. You can copy and paste the output, or you can pipe it to `sh` if it looks sane.
+If you choose to go the `rrdtool` route, I've provided a convenience script to generate the RRD file. Run, for example `./target/build/cablemodem_stats mb8600 | ./rrd_create_command.sh`, to generate the appropriate RRD commands for creating the RRD file. You can copy and paste the output, or you can pipe it to `sh` if it looks sane.
 
 After creating the RRD file, test the tool to make sure you're getting stats from it. For example, with an MB8600: ` ./target/debug/cablemodem_stats mb8600`
 
@@ -37,9 +37,14 @@ ARGS:
     <MODEM_TYPE>    [possible values: cgm4331com, mb8600]
 
 OPTIONS:
-    -h, --help                   Print help information
-    -n, --no-ssl                 Don't use HTTPS
-    -p, --password <PASSWORD>    Only used with some cable modems
-    -u, --username <USERNAME>    Only used with some cable modems
-    -V, --version                Print version information
+    -h, --help                        Print help information
+        --influxdb-bucket <BUCKET>    InfluxDB bucket
+        --influxdb-org <ORG>          InfluxDB organization
+        --influxdb-token <TOKEN>      InfluxDB token
+        --influxdb-url <URL>          Use InfluxDB (at URL)
+    -n, --no-ssl                      Don't use SSL when connecting to cable modem
+    -o, --output <OUTPUT>             [default: cricket] [possible values: cricket, influxdbv2]
+    -p, --password <PASSWORD>         Only used with some cable modems
+    -u, --username <USERNAME>         Only used with some cable modems
+    -V, --version                     Print version information
 ```
