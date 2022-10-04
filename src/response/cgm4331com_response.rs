@@ -30,10 +30,7 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                     channel_id += 1;
 
                     if section_num == OutputSections::Downstream as usize {
-                        if !channelinfo
-                            .downstream_info
-                            .contains_key(&channel_id)
-                        {
+                        if !channelinfo.downstream_info.contains_key(&channel_id) {
                             channelinfo
                                 .downstream_info
                                 .insert(channel_id, DownstreamChannelInfo::new());
@@ -60,6 +57,13 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                                     .unwrap()
                                     .freq_mhz =
                                     value_str.split(' ').nth(0).unwrap().parse::<f32>().unwrap();
+                                if !value_str.contains("MHz") {
+                                    channelinfo
+                                        .downstream_info
+                                        .get_mut(&channel_id)
+                                        .unwrap()
+                                        .freq_mhz /= 1_000_000.0;
+                                }
                             }
                             "SNR" => {
                                 channelinfo
@@ -87,10 +91,7 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                             _ => {}
                         }
                     } else if section_num == OutputSections::Upstream as usize {
-                        if !channelinfo
-                            .upstream_info
-                            .contains_key(&channel_id)
-                        {
+                        if !channelinfo.upstream_info.contains_key(&channel_id) {
                             channelinfo
                                 .upstream_info
                                 .insert(channel_id, UpstreamChannelInfo::new());
@@ -117,6 +118,13 @@ impl Parser for ChannelInfoModemModelCGM4331COM {
                                     .unwrap()
                                     .freq_mhz =
                                     value_str.split(' ').nth(0).unwrap().parse::<f32>().unwrap();
+                                if !value_str.contains("MHz") {
+                                    channelinfo
+                                        .upstream_info
+                                        .get_mut(&channel_id)
+                                        .unwrap()
+                                        .freq_mhz /= 1_000_000.0;
+                                }
                             }
                             "Symbol Rate" => {
                                 channelinfo
