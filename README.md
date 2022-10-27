@@ -28,6 +28,9 @@ You should see a lot of output, such as: `1_ds.freq:495 1_ds.power:1.4 1_ds.snr:
 If you're getting that, then we're ready to graph the data. For that, pipe the output to `rrd_update.sh`, like so: `./target/debug/cablemodem_stats mb8600 | ./rrd_update.sh`
 
 Running that from a cron job, or in a sleep loop will populate that RRD file with data. Once you have a good amount of data and you want to see a graph, you can use/modify `rrd_graph.sh` as you like. It will spit out png files which you can view or make accessible however you wish.
+
+*InfluxDB is likely the superior and less cumbersome option*, so that's what I'd recommend. Whichever output you use, you'll need to run `cablemodem_stats` periodically (I run it every 5 minutes) in order to populate your graphs.
+
 ### Options
 ```
 USAGE:
