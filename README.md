@@ -29,7 +29,7 @@ If you're getting that, then we're ready to graph the data. For that, pipe the o
 
 Running that from a cron job, or in a sleep loop will populate that RRD file with data. Once you have a good amount of data and you want to see a graph, you can use/modify `rrd_graph.sh` as you like. It will spit out png files which you can view or make accessible however you wish.
 
-*InfluxDB is likely the superior and less cumbersome option*, so that's what I'd recommend. Whichever output you use, you'll need to run `cablemodem_stats` periodically (I run it every 5 minutes) in order to populate your graphs.
+**InfluxDB is likely the superior and less cumbersome option**, so that's what I'd recommend. Whichever output you use, you'll need to run `cablemodem_stats` periodically (I run it every 5 minutes) in order to populate your graphs.
 
 ### Options
 ```
