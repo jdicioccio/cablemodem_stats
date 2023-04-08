@@ -1,0 +1,24 @@
+services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb2:/var/lib/influxdb2
+      - ${PWD}/docker/influxdb2-config.yml:/etc/influxdb2/config.yml
+    restart: unless-stopped
+  cablemodem_stats:
+    build: .
+    environment:
+      - INFLUXDB2_USERNAME=${INFLUXDB2_USERNAME}
+      - INFLUXDB2_PASSWORD=${INFLUXDB2_PASSWORD}
+      - INFLUXDB2_BUCKET=${INFLUXDB2_BUCKET}
+      - INFLUXDB2_ORG=${INFLUXDB2_ORG}
+      - INFLUXDB2_URL=${INFLUXDB2_URL}
+      - INFLUXDB2_TOKEN=${INFLUXDB2_TOKEN}
+      - MODEM_TYPE=${MODEM_TYPE}
+    restart: unless-stopped
+
+volumes:
+  influxdb2:
+    external: true
