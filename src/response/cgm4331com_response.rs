@@ -1,13 +1,65 @@
 use crate::response::*;
 use crabquery::Document;
 
+use std::str::FromStr;
+
+fn parse_uptime(text: &str) -> Result<u64, String> {
+    let mut days = 0;
+    let mut hours = 0;
+    let mut minutes = 0;
+    let mut seconds = 0;
+
+    let tokens = text.split(|c: char| c.is_whitespace() || c == ':').collect::<Vec<&str>>();
+
+    let mut i = 0;
+    while i < tokens.len() {
+        match tokens[i] {
+            "days" => {
+                days = match u64::from_str(tokens[i - 1]) {
+                    Ok(value) => value,
+                    Err(_) => return Err(format!("Invalid format for days: {}", tokens[i - 1])),
+                };
+            }
+            token if token.ends_with("h") => {
+                hours = match u64::from_str(&token[..token.len() - 1]) {
+                    Ok(value) => value,
+                    Err(_) => return Err(format!("Invalid format for hours: {}", token)),
+                };
+            }
+            token if token.ends_with("m") => {
+                minutes = match u64::from_str(&token[..token.len() - 1]) {
+                    Ok(value) => value,
+                    Err(_) => return Err(format!("Invalid format for minutes: {}", token)),
+                };
+            }
+            token if token.ends_with("s") => {
+                seconds = match u64::from_str(&token[..token.len() - 1]) {
+                    Ok(value) => value,
+                    Err(_) => return Err(format!("Invalid format for seconds: {}", token)),
+                };
+            }
+            _ => {}
+        }
+        i += 1;
+    }
+
+    let total_seconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
+    Ok(total_seconds)
+}
+
 impl Parser for ChannelInfoModemModelCGM4331COM {
     fn parse(body: &str) -> Result<ChannelInfo, String> {
         let root = Document::from(body);
         let sections = root.select("tbody");
+        let form_rows = root.select("div.form-row");
+        let uptime_row = form_rows.iter().filter(|row| {
+            row.select("span")[0].text().unwrap_or("".to_string()) == "System Uptime:"
+        }).next().unwrap();
+        let uptime_value = uptime_row.select("span")[1].text().unwrap();
+
         let mut channelinfo = ChannelInfo {
             timestamp: std::time::SystemTime::now(),
-            system_uptime: 0,
+            system_uptime: parse_uptime(&uptime_value).unwrap_or(0),
             downstream_info: BTreeMap::new(),
             upstream_info: BTreeMap::new(),
         };

@@ -64,6 +64,16 @@ impl InfluxdbFormatter {
         {
             return Err(us_result.unwrap_err().to_string());
         }
+
+        let uptime_point = Point::new("cm_system")
+        .add_field("uptime", Value::Integer(info.system_uptime as i64));
+
+        let uptime_result = client.write_point(uptime_point, Some(Precision::Seconds), None).await;
+
+        if uptime_result.is_err()
+        {
+            return Err(uptime_result.unwrap_err().to_string());
+        }
         
         Ok(())
     }
