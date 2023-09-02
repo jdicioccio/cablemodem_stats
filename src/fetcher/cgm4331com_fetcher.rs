@@ -37,7 +37,7 @@ impl Fetcher for CGM4331COM {
             if k.as_str() == "set-cookie" {
                 if let Ok(cookie) = v.to_str() {
                     if cookie.starts_with("DUKSID=") {
-                        sess_cookie = Some(cookie);
+                        sess_cookie = Some(cookie.split_once(';').unwrap().0);
                     }
                 }
             }
@@ -46,7 +46,7 @@ impl Fetcher for CGM4331COM {
         let cookie = sess_cookie.unwrap();
 
         let req2_builder = make_request_builder("10.0.0.1/network_setup.jst", use_ssl);
-        let req2 = req2_builder.header("Cookie", cookie).body(())?;
+        let req2 = req2_builder.method("GET").header("Cookie", cookie).body(())?;
         let mut resp2 = req2.send()?;
 
         assert!(resp2.status().is_success());
