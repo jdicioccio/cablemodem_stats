@@ -9,6 +9,7 @@ use output::influxdb_output::InfluxdbFormatter;
 #[derive(ArgEnum, Debug, Clone)]
 pub enum ModemTypes {
     Cgm4331com,
+    Cgm4981com,
     Mb8600,
 }
 
@@ -83,6 +84,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let body = match modem_type {
         ModemTypes::Cgm4331com => {
+            if args.username.is_none() || args.password.is_none() {
+                cmd.error(
+                    clap::ErrorKind::MissingRequiredArgument,
+                    "Username and password are required for this modem type",
+                )
+                .exit();
+            }
+            fetcher::fetch(
+                &fetcher::cgm4331com_fetcher::CGM4331COM::new(
+                    &args.username.unwrap(),
+                    &args.password.unwrap(),
+                ),
+                use_ssl,
+            )?
+        }
+        ModemTypes::Cgm4981com => {
             if args.username.is_none() || args.password.is_none() {
                 cmd.error(
                     clap::ErrorKind::MissingRequiredArgument,

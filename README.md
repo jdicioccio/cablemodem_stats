@@ -3,12 +3,12 @@
 ## What is this?
 In a nutshell, what it does is it:
 
-1. Gathers stats from a Motorola or Comcast XB7 (Technicolor) cable modem. These stats include SnR, power level, corrected errors, and uncorrected errors for each channel.
+1. Gathers stats from a Motorola, Comcast XB7 (Technicolor), or XB8 (Technicolor) cable modem. These stats include SnR, power level, corrected errors, and uncorrected errors for each channel.
 1. It also will graph this data using the ancient RRDTool or the much newer InfluxDB (version 2)
 
 I wrote this tool as I was having issues with my cable internet and wanted to have solid documentation to back it up. The issues have since been resolved. Hopefully this comes in handy for others.
 
-**This, so far, is only known to work on the Motorola MB8600 and the Comcast XB7 (CGM4331COM) modems.** If you have a different cable modem, feel free to give it a shot, but know that it's a roll of the dice.
+**This, so far, is only known to work on the Motorola MB8600, the Comcast XB7 (CGM4331COM), and XB8 (CGM4981COM) modems.** If you have a different cable modem, feel free to give it a shot, but know that it's a roll of the dice. I suspect that other flavors of recent Comcast-provided modems have a decent chance of working.
 
 ## Prerequisites
 - Rust compiler (I'm using 1.62.1)
@@ -37,7 +37,7 @@ USAGE:
     cablemodem_stats [OPTIONS] <MODEM_TYPE>
 
 ARGS:
-    <MODEM_TYPE>    [possible values: cgm4331com, mb8600]
+    <MODEM_TYPE>    [possible values: cgm4331com, cgm4981com, mb8600]
 
 OPTIONS:
     -h, --help                        Print help information

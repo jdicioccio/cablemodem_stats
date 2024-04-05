@@ -75,6 +75,7 @@ pub trait Parser {
 pub fn parse(modem_type: ModemTypes, body: &str) -> Result<ChannelInfo, String> {
     match modem_type {
         ModemTypes::Cgm4331com => ChannelInfoModemModelCGM4331COM::parse(body),
+        ModemTypes::Cgm4981com => ChannelInfoModemModelCGM4331COM::parse(body),
         ModemTypes::Mb8600 => ChannelInfoModemModelMB8600::parse(body),
     }
 }
